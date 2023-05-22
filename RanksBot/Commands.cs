@@ -24,10 +24,14 @@ namespace RanksBot
         {
             var guild = _client.GetGuild(1031999653094363177);
 
-            var guildCommand = new SlashCommandBuilder();
+            var guildCommand1 = new SlashCommandBuilder();
+            var guildCommand2 = new SlashCommandBuilder();
 
-            guildCommand.WithName("ping");
-            guildCommand.WithDescription("A game of ping-pong!");
+            guildCommand1.WithName("ping");
+            guildCommand1.WithDescription("A game of ping-pong!");
+
+            guildCommand2.WithName("fetch-ranks");
+            guildCommand2.WithDescription("retrieve all current ranks");
 
             var globalCommand = new SlashCommandBuilder();
 
@@ -36,7 +40,8 @@ namespace RanksBot
 
             try
             {
-                 await guild.CreateApplicationCommandAsync(guildCommand.Build());
+                 await guild.CreateApplicationCommandAsync(guildCommand1.Build());
+                 await guild.CreateApplicationCommandAsync(guildCommand2.Build());
                  await guild.CreateApplicationCommandAsync(globalCommand.Build());
             }
             catch (HttpException e)

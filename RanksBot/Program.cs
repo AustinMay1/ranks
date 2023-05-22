@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Newtonsoft.Json.Linq;
 
 namespace RanksBot
 {
@@ -10,6 +9,7 @@ namespace RanksBot
         private LoggingService _log = null!;
         private Commands _commands = null!;
         
+        
         public static Task Main(string[] args) => new Program().MainAsync();
 
         private async Task MainAsync()
@@ -17,14 +17,14 @@ namespace RanksBot
             _client = new DiscordSocketClient();
             _log = new LoggingService(_client);
             _commands = new Commands(_client);
-
+            
             _client.SlashCommandExecuted += SlashCommandHandler;
 
             var token = File.ReadAllText("token.txt");
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
-
+                                            
             await Task.Delay(-1);
         }
 
@@ -34,9 +34,14 @@ namespace RanksBot
             {
                 await command.RespondAsync($"You executed {command.Data.Name}\npong!");
             }
+            else if (command.Data.Name == "fetch-ranks")
+            {
+                Sheets.Connect();
+                await command.RespondAsync("Ranks fetched to console!");
+            }
             else
             {
-                await command.RespondAsync("Hello!");
+                await command.RespondAsync("Howdy!");
             }
         }
     }
