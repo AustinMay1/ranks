@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RanksBot
+namespace RanksBot.Logging
 {
     public class LoggingService
     {
-        public LoggingService(DiscordSocketClient client) => client.Log += LogAsync;  
-        
+        public LoggingService(DiscordSocketClient client) => client.Log += LogAsync;
+
         private Task LogAsync(LogMessage message)
         {
             if (message.Exception is CommandException cmdException)
