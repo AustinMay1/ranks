@@ -23,6 +23,7 @@ namespace RanksBot.Commands
             var embed = new EmbedBuilder()
                 .WithAuthor(command.User)
                 .WithTitle($"Rank: {command.Data.Options.First().Value}\nCheck console.")
+                .WithDescription("Members up for promotion!")
                 .WithColor(Color.Purple)
                 .WithCurrentTimestamp();
 
