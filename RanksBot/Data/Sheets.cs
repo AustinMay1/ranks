@@ -12,7 +12,7 @@ namespace RanksBot.Data
         static readonly string Sheet = "Sheet1";
         static SheetsService Service = null!;
 
-        public static void Connect(string rank)
+        public static IList<IList<object>> Connect(string rank)
         {
             GoogleCredential credential;
             using (var stream = new FileStream("ranks.json", FileMode.Open, FileAccess.Read))
@@ -27,39 +27,42 @@ namespace RanksBot.Data
                 ApplicationName = ApplicationName
             });
 
-            ReadEntries(rank);
+            return ReadEntries(rank);
         }
 
-        static void ReadEntries(string rank)
+        static IList<IList<object>> ReadEntries(string rank)
         {
             var range = $"{Sheet}!A1:C500";
             var request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
             var response = request.Execute();
             var values = response.Values;
-            var today = DateTime.Now;
-            TimeSpan diff;
             
+            // var today = DateTime.Now;
+            // TimeSpan diff;
+            //
+            //
+            // if (values != null && values.Count > 0)
+            // {
+            //     foreach (var row in values)
+            //     {
+            //         
+            //         diff = today - DateTime.Parse((string) row[2]);
+            //         
+            //         if ((string) row[1] == rank)
+            //         {
+            //             if (diff.TotalDays >= Ranks.ranks[rank] - 10)
+            //             {
+            //                 Console.WriteLine($"User: {row[0]}     |      Rank: {row[1]}     |     Total Days: {(int) diff.TotalDays}");
+            //             }
+            //         }
+            //     }
+            // }
+            // else
+            // {
+            //     Console.WriteLine("No data :P");
+            // }
 
-            if (values != null && values.Count > 0)
-            {
-                foreach (var row in values)
-                {
-                    
-                    diff = today - DateTime.Parse((string) row[2]);
-                    
-                    if ((string) row[1] == rank)
-                    {
-                        if (diff.TotalDays <= Ranks.ranks[rank])
-                        {
-                            Console.WriteLine($"User: {row[0]}     |      Rank: {row[1]}     |     Total Days: {(int) diff.TotalDays}");
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No data :P");
-            }
+            return values ?? null;
         }
     }
 }

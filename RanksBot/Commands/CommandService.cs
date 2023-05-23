@@ -24,7 +24,7 @@ namespace RanksBot.Commands
             _client.SlashCommandExecuted += SlashCommandHandler;
         }
 
-        public async Task Client_Ready()
+        private async Task Client_Ready()
         {
             var guild = _client.GetGuild(1031999653094363177);
 
