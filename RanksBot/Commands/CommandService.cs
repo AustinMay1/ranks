@@ -37,7 +37,7 @@ namespace RanksBot.Commands
                     .WithRequired(true)
                         .AddChoice("recruit", "Recruit")
                         .AddChoice("corporal", "Corporal")
-                        .AddChoice("donator", "Sapphire")
+                        .AddChoice("novice", "Novice")
                     .WithType(ApplicationCommandOptionType.String));
           
             var globalCommand = new SlashCommandBuilder();
@@ -48,7 +48,7 @@ namespace RanksBot.Commands
             try
             {
                 await guild.CreateApplicationCommandAsync(ranksCommand.Build());
-                await guild.CreateApplicationCommandAsync(globalCommand.Build());
+                await _client.CreateGlobalApplicationCommandAsync(globalCommand.Build());
             }
             catch (HttpException e)
             {

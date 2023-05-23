@@ -1,6 +1,5 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Sheets.v4;
-using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Services;
 
 namespace RanksBot.Data
@@ -37,14 +36,23 @@ namespace RanksBot.Data
             var request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
             var response = request.Execute();
             var values = response.Values;
+            var today = DateTime.Now;
+            TimeSpan diff;
+            
 
             if (values != null && values.Count > 0)
             {
                 foreach (var row in values)
                 {
+                    
+                    diff = today - DateTime.Parse((string) row[2]);
+                    
                     if ((string) row[1] == rank)
                     {
-                        Console.WriteLine($"{row[0]}   |   {row[1]}   |   {row[2]}");
+                        if (diff.TotalDays <= Ranks.ranks[rank])
+                        {
+                            Console.WriteLine($"User: {row[0]}     |      Rank: {row[1]}     |     Total Days: {(int) diff.TotalDays}");
+                        }
                     }
                 }
             }
