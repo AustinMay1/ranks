@@ -39,6 +39,11 @@ namespace RanksBot.Commands
                         .AddChoice("corporal", "Corporal")
                         .AddChoice("novice", "Novice")
                     .WithType(ApplicationCommandOptionType.String));
+
+            var linkRSNCommand = new SlashCommandBuilder()
+                .WithName("set-rsn")
+                .WithDescription("link your Discord username to your rsn")
+                .AddOption("rsn", ApplicationCommandOptionType.String, "your rsn", isRequired: true);
           
             var globalCommand = new SlashCommandBuilder();
 
@@ -48,6 +53,7 @@ namespace RanksBot.Commands
             try
             {
                 await guild.CreateApplicationCommandAsync(ranksCommand.Build());
+                await guild.CreateApplicationCommandAsync(linkRSNCommand.Build());
                 await _client.CreateGlobalApplicationCommandAsync(globalCommand.Build());
             }
             catch (HttpException e)
@@ -66,8 +72,8 @@ namespace RanksBot.Commands
                 case "ping":
                     await CommandHandler.Ping(command);
                     break;
-                case "pong":
-                    await command.RespondAsync("ping!");
+                case "set-rsn":
+                    await CommandHandler.LinkRSN(command);
                     break;
                 case "ranks":
                     // Sheets.Connect();

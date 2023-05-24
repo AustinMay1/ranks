@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Services;
+using Google.Apis.Sheets.v4.Data;
 
 namespace RanksBot.Data
 {
@@ -26,6 +27,8 @@ namespace RanksBot.Data
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName
             });
+            
+            // WriteEntry("Not Ur Hero#4094");
 
             return ReadEntries(rank);
         }
@@ -37,32 +40,22 @@ namespace RanksBot.Data
             var response = request.Execute();
             var values = response.Values;
             
-            // var today = DateTime.Now;
-            // TimeSpan diff;
-            //
-            //
-            // if (values != null && values.Count > 0)
-            // {
-            //     foreach (var row in values)
-            //     {
-            //         
-            //         diff = today - DateTime.Parse((string) row[2]);
-            //         
-            //         if ((string) row[1] == rank)
-            //         {
-            //             if (diff.TotalDays >= Ranks.ranks[rank] - 10)
-            //             {
-            //                 Console.WriteLine($"User: {row[0]}     |      Rank: {row[1]}     |     Total Days: {(int) diff.TotalDays}");
-            //             }
-            //         }
-            //     }
-            // }
-            // else
-            // {
-            //     Console.WriteLine("No data :P");
-            // }
-
             return values ?? null;
+        }
+
+        static void WriteEntry(string value)
+        {
+            var range = $"{Sheet}!D1";
+            var valueRange = new ValueRange();
+            var objects = new List<object>(){ value };
+            valueRange.Values = new List<IList<object>> { objects };
+
+            var appendReq = Service.Spreadsheets.Values.Append(valueRange, SpreadsheetId, range);
+            appendReq.ValueInputOption =
+                SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
+            var response = appendReq.Execute();
+            
+            Console.WriteLine(response.Updates);
         }
     }
 }

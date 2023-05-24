@@ -48,5 +48,10 @@ namespace RanksBot.Commands
 
             await command.RespondAsync(embed: embed.Build());
         }
+
+        public static async Task LinkRSN(SocketSlashCommand command)
+        {
+            await command.RespondAsync((string) command.Data.Options.First().Value);
+        }
     }
 }

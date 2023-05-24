@@ -6,6 +6,6 @@ static class Ranks
     {
         { "Recruit", 60 },
         { "Corporal", 180 },
-        { "Novice", 365 },
+        { "Novice", 730 },
     };
 } // { RankName : TimeToPromotionInDays }
