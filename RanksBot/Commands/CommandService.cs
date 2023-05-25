@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Discord.Commands;
 
 namespace RanksBot.Commands
 {
@@ -44,7 +45,7 @@ namespace RanksBot.Commands
                 .WithName("set-rsn")
                 .WithDescription("link your Discord username to your rsn")
                 .AddOption("rsn", ApplicationCommandOptionType.String, "your rsn", isRequired: true);
-          
+
             var globalCommand = new SlashCommandBuilder();
 
             globalCommand.WithName("hi");
@@ -76,7 +77,6 @@ namespace RanksBot.Commands
                     await CommandHandler.LinkRSN(command);
                     break;
                 case "ranks":
-                    // Sheets.Connect();
                     await CommandHandler.FetchRanks(command);
                     break;
                 case "hi":

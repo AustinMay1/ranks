@@ -45,17 +45,17 @@ namespace RanksBot.Data
 
         static void WriteEntry(string value)
         {
-            var range = $"{Sheet}!D1";
+            var range = $"{Sheet}!D";
             var valueRange = new ValueRange();
             var objects = new List<object>(){ value };
+            
             valueRange.Values = new List<IList<object>> { objects };
-
+            
             var appendReq = Service.Spreadsheets.Values.Append(valueRange, SpreadsheetId, range);
             appendReq.ValueInputOption =
                 SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
-            var response = appendReq.Execute();
             
-            Console.WriteLine(response.Updates);
+            var response = appendReq.Execute();
         }
     }
 }
