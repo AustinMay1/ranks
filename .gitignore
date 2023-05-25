@@ -364,3 +364,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /RanksBot/token.txt
 /RanksBot/ranks.json
+/RanksBot/settings.json

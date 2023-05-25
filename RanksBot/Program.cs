@@ -1,54 +1,54 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using RanksBot.Logging;
-using RanksBot.Commands;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Discord.Interactions;
 
 namespace RanksBot
 {
     public class Program
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _services;
+        private readonly IConfiguration _configuration;
 
         public Program() 
         {
-            _serviceProvider = CreateProvider();
+            _configuration = new ConfigurationBuilder()
+                .AddJsonFile("settings.json", optional: false)
+                .Build();
+
+            _services = new ServiceCollection()
+                .AddSingleton(_configuration)
+                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+                .AddSingleton<InteractionHandler>()
+                .BuildServiceProvider();
         }
         
-        static void Main(string[] args) => new Program().RunAsync(args).GetAwaiter().GetResult();
+        static void Main(string[] args) => new Program().RunAsync().GetAwaiter().GetResult();
 
-        static IServiceProvider CreateProvider()
+        private async Task RunAsync()
         {
-            var collection = new ServiceCollection();
+            var client = _services.GetRequiredService<DiscordSocketClient>();
 
-            return collection.BuildServiceProvider();
-        }
-
-        static IServiceProvider CreateServices()
-        {
-            var config = new DiscordSocketConfig() {  };
-
-            var collection = new ServiceCollection()
-                .AddSingleton(config)
-                .AddSingleton<DiscordSocketClient>()
-                ;
-
-            return collection.BuildServiceProvider();
-        }
-
-        private async Task RunAsync(string[] args)
-        {
-            var client = CreateServices().GetRequiredService<DiscordSocketClient>();
+            await _services.GetRequiredService<InteractionHandler>().InitializeAsync();
 
             new LoggingService(client);
-            new CommandService(client);
             
-            var token = File.ReadAllText("token.txt");
-
-            await client.LoginAsync(TokenType.Bot, token);
+            await client.LoginAsync(TokenType.Bot, _configuration["token"]);
             await client.StartAsync();
                                             
             await Task.Delay(Timeout.Infinite);
+        }
+
+        public static bool IsDebug()
+        {
+            #if DEBUG
+                return true;
+            #else
+                return false;
+            #endif
         }
     }
 }
